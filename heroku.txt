@@ -1,6 +1,7 @@
 alembic==0.7.6
 argcomplete==0.8.4
 astropy==1.0.1
+Cython==0.22
 bcolz==0.8.1
 beautifulsoup4==4.3.2
 binstar==0.10.1
@@ -19,7 +20,6 @@ conda-build==1.11.0
 conda-env==2.1.3
 configobj==5.0.6
 cryptography==0.8
-Cython==0.22
 cytoolz==0.7.2
 DataShape==0.4.4
 decorator==3.4.0
