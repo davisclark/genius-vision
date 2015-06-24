@@ -11,8 +11,8 @@ from ..models import User, Song, Artist, Annotation, Referent
 from ..decorators import permission_required
 
 
-client_id = "ym7CVRkna6PLmT2MgCmDimPgbWyAbfGwO2PBevqoHw6tVS_32hy2ZV9jBMGE5Ydq"
-client_secret = "-mLg5ebXvx_vlw_68hu9ztw5ouM4793UsyD2Xv1mFHvGpT97LVXYKWh6P4rLFWNTjJH7BnEQMkbq4AeG_WCBDA"
+client_id = os.getenv('CLIENT_ID')
+client_secret = os.getenv('CLIENT_SECRET')
 authorization_base_url = "https://api.genius.com/oauth/authorize"
 token_url = "https://api.genius.com/oauth/token"
 scope = ["me","create_annotation", "manage_annotation", "vote"]
