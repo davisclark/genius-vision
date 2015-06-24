@@ -1,7 +1,8 @@
+Cython
 alembic==0.7.6
 argcomplete==0.8.4
 astropy==1.0.1
-Cython==0.22
+bcolz==0.8.1
 beautifulsoup4==4.3.2
 binstar==0.10.1
 bitarray==0.8.1
