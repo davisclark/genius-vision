@@ -1,0 +1,256 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+
+{% block meta %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="description" content="" />
+<meta name="keywords" content="" /
+<link rel="canonical" href="" />
+{% endblock %}
+{% block title %}Genius Vision{% endblock %}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet"
+    href="{{ url_for('static', filename='styles/chart.css') }}"
+    type="text/css" />
+{% endblock %}
+{{fixes.ie8()}}
+<script>
+var data = {{ song_data }}
+</script>
+
+{% block body %}
+<div class="container">
+{% for message in get_flashed_messages() %}
+<div class="alert">{{ message }}</div>
+{% endfor %}
+<div class="row">
+    <div class="col-md-4 h2"><small>Genius Vision</small></div>
+</div>
+<div class="row">
+    <div class="col-md-2 h4">
+        {% if session.name %}
+            Hello {{ session.name }}
+        {% else %}
+            Hello!
+        {% endif %}
+    </div>
+    {% if session.id %}
+    <div class="col-md-1">
+        <a class="btn btn-default btn-xs" role="button" href={{ url_for('main.logout') }}>Log out</a>
+    </div>
+    {% endif %}
+</div>
+<div class="row">
+        {% if session.id %}
+        <div class="col-md-3 h4">Genius ID: {{ session.id }}</div>
+        {% endif %}
+        {% if session.iq %}
+        <div class="col-md-3 h4">Genius IQ: {{ session.iq }}</div>
+        {% endif %}
+</div>
+
+<div class="row">
+    {% if session.id %}
+        <div class="col-md-3">
+        <a class="btn btn-primary" role="button" href={{ url_for('main.Analysis') }}>Turn on Genius Vision</a>
+        </div>
+    {% else %}
+        <div class="col-md-1">
+            <a class="btn btn-primary" role="button" href={{ url_for('main.account') }}>Authorize Genius Vision</a>
+        </div>
+    {% endif %}            
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+    {% if song_data %}
+        <h3>Song Annotation Data</h3>
+        <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <td>Total Words</td>
+                <td>Total Votes</td>
+                <td>Average Words</td>
+                <td>Average Votes</td>
+            </thead>
+            <tbody>
+                <td>{{ song_summary['totalWords'] }}</td>
+                <td>{{ song_summary['totalVotes'] }}</td>
+                <td>{{ song_summary['avgWords'] }}</td>
+                <td>{{ song_summary['avgVotes'] }}</td>
+            </tbody>
+        </table>
+        <div id="chart"></div>
+        <div class="row">
+        <div class="col-md-1"><span class="carat" onclick=someFunction(tableToggle("songtable"));></span></div>
+        </div>
+        <table id="songtable" class="table table-condensed table-hover">
+                <thead>
+                    <td>Referent ID</td>
+                    <td>Type</td>
+                    <td>Song ID</td>
+                    <td>Title</td>
+                    <td>Votes</td>
+                    <td>Average Votes</td>
+                    <td>Words</td>
+                    <td>Average Words</td>
+                    <td>Pyongs</td>
+                    <td>Annotations</td>
+                    <td>Pageviews</td>
+                    <td>Comments</td>
+                </thead>
+                <tbody>
+                {% for data in song_data %}
+                    <tr>
+                        <td><a href={{ data[''] }} target="_blank">{{ data['id'] }}</a></td>
+                        <td><a href="">{{ data.type }}</a></td>
+                        <td><a href="/songs/{{ data['song_id'] }}">{{ data['song_id'] }}</a></td>
+                        <td><a href="{{ data['share_url'] }}" target="_blank">{{ data['title'] }}</a></td>
+                        <td><a href="">{{ data['votes'] }}</a></td>
+                        <td>{{ data['compare']['avgVotes'] }}</td>
+                        <td><a href="">{{ data['words'] }}</a></td>
+                        <td>{{ data['compare']['avgWords'] }}</td>
+                        <td><a href="">{{ data['pyongs'] }}</a></td>
+                        <td><a href="">{{ data['annotations'] }}</a></td>
+                        <td><a href="">{{ data['pageviews'] }}</a></td>
+                        <td><a href="">{{ data['comments'] }}</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+        </table>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+    {% if web_data %}
+        <h3>Web Annotation Data</h3>
+        <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <td>Total Words</td>
+                <td>Total Votes</td>
+                <td>Average Words</td>
+                <td>Average Votes</td>
+            </thead>
+            <tbody>
+                <td>{{ web_summary['totalWords'] }}</td>
+                <td>{{ web_summary['totalVotes'] }}</td>
+                <td>{{ web_summary['avgWords'] }}</td>
+                <td>{{ web_summary['avgVotes'] }}</td>
+            </tbody>
+        </table>
+        <span class="carat" onclick=someFunction(tableToggle("webtable"));></span>
+        <table id="webtable" class="table table-condensed table-striped">
+                <thead>
+                    <td>Referent ID</td>
+                    <td>Type</td>
+                    <td>Song ID</td>
+                    <td>Title</td>
+                    <td>Votes</td>
+                    <td>Words</td>
+                    <td>Pyongs</td>
+                    <td>Annotations</td>
+                    <td>Pageviews</td>
+                    <td>Comments</td>
+                </thead>
+                <tbody>
+                {% for data in web_data %}
+                    <tr>
+                        <td><a href={{ data[''] }} target="_blank">{{ data['id'] }}</a></td>
+                        <td><a href="">{{ data.type }}</a></td>
+                        <td><a href="/songs/{{ data['song_id'] }}">{{ data['song_id'] }}</a></td>
+                        <td><a href="{{ data['share_url'] }}" target="_blank">{{ data['title'] }}</a></td>
+                        <td><a href="">{{ data['votes'] }}</a></td>
+                        <td><a href="">{{ data['words'] }}</a></td>
+                        <td><a href="">{{ data['pyongs'] }}</a></td>
+                        <td><a href="">{{ data['annotations'] }}</a></td>
+                        <td><a href="">{{ data['pageviews'] }}</a></td>
+                        <td><a href="">{{ data['comments'] }}</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+        </table>
+        </div>
+    {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+    {% if artist_data %}
+        <h3>Artist Data</h3>
+        <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <td>Total Words</td>
+                <td>Total Votes</td>
+                <td>Average Words</td>
+                <td>Average Votes</td>
+            </thead>
+            <tbody>
+                <td>{{ artist_summary['totalWords'] }}</td>
+                <td>{{ artist_summary['totalVotes'] }}</td>
+                <td>{{ artist_summary['avgWords'] }}</td>
+                <td>{{ artist_summary['avgVotes'] }}</td>
+            </tbody>
+        </table>
+        <span class="carat" onclick=someFunction({{ item|safe }});></span>
+        <table id="artisttable" class="table table-condensed table-striped">
+                <thead>
+                    <td>Referent ID</td>
+                    <td>Type</td>
+                    <td>Song ID</td>
+                    <td>Title</td>
+                    <td>Votes</td>
+                    <td>Words</td>
+                    <td>Pyongs</td>
+                    <td>Annotations</td>
+                    <td>Pageviews</td>
+                    <td>Comments</td>
+                </thead>
+                <tbody>
+                {% for data in artist_data %}
+                    <tr>
+                        <td><a href={{ data[''] }} target="_blank">{{ data['id'] }}</a></td>
+                        <td><a href="">{{ data.type }}</a></td>
+                        <td><a href="/songs/{{ data['song_id'] }}">{{ data['song_id'] }}</a></td>
+                        <td><a href="{{ data['share_url'] }}" target="_blank">{{ data['title'] }}</a></td>
+                        <td><a href="">{{ data['votes'] }}</a></td>
+                        <td><a href="">{{ data['words'] }}</a></td>
+                        <td><a href="">{{ data['pyongs'] }}</a></td>
+                        <td><a href="">{{ data['annotations'] }}</a></td>
+                        <td><a href="">{{ data['pageviews'] }}</a></td>
+                        <td><a href="">{{ data['comments'] }}</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            
+        </table>
+        </div>
+    {% endif %}
+    </div>
+</div>
+
+
+
+
+
+{% block scripts %}
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="{{ url_for('static', filename='scripts/chart.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/moment.js') }}"></script>
+<script>
+function toggleTable(tableID) {
+    $( "#"+tableID ).toggle();
+}
+</script>
+{% endblock %}
+{% endblock %}

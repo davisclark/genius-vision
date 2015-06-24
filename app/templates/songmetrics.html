@@ -1,0 +1,39 @@
+{% extends "index.html" %}
+
+{% block summary %}
+{{ super() }}
+<tr>
+<td>Type: {{ dataset[0]['type'] }}</td>
+<td>Title: {{ songdata['title'] }}</td>
+<td>Pageviews:{{ songdata['pageviews'] }}</td>
+<td>Pyongs: {{ songdata['pyongs'] }}</td>
+</tr>
+{% endblock %}
+{% block content %}
+        <table class="list-unstyled topic-panel">
+            {% if dataset %}
+                <thead>
+                    <td>Annotator ID</td>
+                    <td>Annotations</td>
+                    <td>Referent ID</td>
+                    <td>Total Votes</td>
+                    <td>Comment Count</td>
+                    <td>Authors</td>
+                </thead>
+                <tbody>
+                {% for data in dataset %}
+                    <tr class="option">
+                        <td><a href="">{{ data['annotator_id'] }}</a></td>
+                        <td><a href="">{{ data['annotations'] }}</a></td>
+                        <td><a href={{ data[''] }} target="_blank">{{ data['id'] }}</a></td>
+                        <td><a href="">{{ data['votes'] }}</a></td>
+                        <td><a href="">{{ data['comments'] }}</a></td>
+                        <td><a href="">{{ data['authors'] }}</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            {% else %}
+                <tr><td>---</td></tr>
+            {% endif %}
+        </table>
+    {% endblock %}
