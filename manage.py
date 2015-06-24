@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.4.3
 import os
 COV = None
 if os.environ.get('FLASK_COVERAGE'):
